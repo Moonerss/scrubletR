@@ -36,6 +36,7 @@ scrublet_R <- function(seurat_obj, python_home = Sys.which("python"),
   reticulate::source_python(paste(system.file(package = "scrubletR"), "scrublet.py", sep = "/"))
 
   ## prepare the data
+  count_mat <- Seurat::GetAssayData(seurat_obj, layer = "counts", assay = 'RNA')
   X <- as(Matrix::t(seurat_obj@assays$RNA@counts), "TsparseMatrix")
   i <- as.integer(X@i)
   j <- as.integer(X@j)
