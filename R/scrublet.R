@@ -223,17 +223,4 @@ scrublet_R <- function(seurat_obj, python_home = Sys.which("python"),
 }
 
 
-source_py <- function(python_home = Sys.which("python"),
-                      py_script = paste(system.file(package = "scrubletR"), "scrublet.py", sep = "/")) {
-  ## use the python
-  reticulate::use_python(python_home)
 
-  ## test whether have the modules
-  if (!reticulate::py_module_available("scrublet")) {
-    stop("python module scrublet does not seem to be installed; - try running 'py_config()'")
-  }
-
-  ## source .py file
-  reticulate::source_python(py_script)
-
-}

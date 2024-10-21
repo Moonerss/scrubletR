@@ -21,13 +21,19 @@ remotes::install_github("Moonerss/scrubletR")
 
 -   R package: Matrix, reticulate, Seurat
 
--   Python module: scrublet
+-   Python module: scrublet (v0.2.3)
 
 ## Using
 
+### One step run scrublet
+
 ``` r
 load("~/samples.RData")
+
 res <- scrublet_R(seurat_obj = samples)
+
+## use specific threshold
+res <- scrublet_R(seurat_obj = samples, threshold = 0.25)
 # Preprocessing...
 # Simulating doublets...
 # Embedding transcriptomes using PCA...
@@ -57,4 +63,24 @@ head(res@meta.data)
 # AAACCCACAAAGGTTA-1     0.02451680              FALSE
 # AAACCCACAGACGCTC-1     0.01955671              FALSE
 # AAACCCACAGGAACCA-1     0.01955671              FALSE
+```
+
+### Step by step run scrublet  
+
+```r
+## init scrublet
+scrublet_obj = get_init_scrublet(seurat_obj = samples)
+
+## plot histogram
+plot_histogram(scrublet_obj)
+
+## update threshold
+scrublet_obj = call_doublets(scrublet_obj, threshold = 0.25)
+
+## plot to check again
+plot_histogram(scrublet_obj)
+
+## add info to seurat obj
+samples[["doublet_scores"]] <- scrublet_obj$doublet_scores_obs_
+samples[["predicted_doublets"]] <- scrublet_obj$predicted_doublets_
 ```
