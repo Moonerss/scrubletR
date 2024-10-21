@@ -22,9 +22,16 @@ get_init_scrublet <- function(seurat_obj, python_home = Sys.which("python"),
                               min_gene_variability_pctl=85,
                               n_prin_comps=50, sim_doublet_ratio=2,
                               n_neighbors=NULL) {
-  ## source py
-  source_py(python_home = python_home,
-            py_script = paste(system.file(package = "scrubletR"), "scrublet.py", sep = "/"))
+  ## use the python
+  reticulate::use_python(python_home)
+
+  ## test whether have the modules
+  if (!reticulate::py_module_available("scrublet")) {
+    stop("python module scrublet does not seem to be installed; - try running 'py_config()'")
+  }
+
+  ## source .py file
+  reticulate::source_python(paste(system.file(package = "scrubletR"), "scrublet.py", sep = "/"))
 
   ## prepare the data
   count_mat <- Seurat::GetAssayData(seurat_obj, layer = "counts", assay = 'RNA')
@@ -98,7 +105,7 @@ plot_histogram <- function(scrublet_obj, threshold = NULL) {
     scale_x_continuous(limits = c(0, 1)) +
     annotation_logticks(sides="l") +
     geom_vline(xintercept = thres, linetype = 'solid', color = 'black') +
-    labs(x = 'Doublet score', y = 'Prob. density', title = 'Observed transriptomes') +
+    labs(x = 'Doublet score', y = 'Prob. density', title = 'Simulated doublets') +
     theme_bw() +
     theme(panel.grid = element_blank(),
           plot.title = element_text(hjust = 0.5),
@@ -129,9 +136,16 @@ call_doublets <- function(scrublet_obj, threshold = NULL, python_home = Sys.whic
     thres <- threshold
   }
 
-  ## source py
-  source_py(python_home = python_home,
-            py_script = paste(system.file(package = "scrubletR"), "scrublet.py", sep = "/"))
+  ## use the python
+  reticulate::use_python(python_home)
+
+  ## test whether have the modules
+  if (!reticulate::py_module_available("scrublet")) {
+    stop("python module scrublet does not seem to be installed; - try running 'py_config()'")
+  }
+
+  ## source .py file
+  reticulate::source_python(paste(system.file(package = "scrubletR"), "scrublet.py", sep = "/"))
 
   scrub_obj_new = call_scrublet_doublets(scrublet_obj, threshold = thres)
 
@@ -171,9 +185,17 @@ scrublet_R <- function(seurat_obj, python_home = Sys.which("python"),
                        min_gene_variability_pctl=85,
                        n_prin_comps=50, sim_doublet_ratio=2, n_neighbors=NULL,
                        threshold = NULL) {
-  ## source py
-  source_py(python_home = python_home,
-            py_script = paste(system.file(package = "scrubletR"), "scrublet.py", sep = "/"))
+
+  ## use the python
+  reticulate::use_python(python_home)
+
+  ## test whether have the modules
+  if (!reticulate::py_module_available("scrublet")) {
+    stop("python module scrublet does not seem to be installed; - try running 'py_config()'")
+  }
+
+  ## source .py file
+  reticulate::source_python(paste(system.file(package = "scrubletR"), "scrublet.py", sep = "/"))
 
   ## do the scrublet analysis
   scrublet_obj <- get_init_scrublet(seurat_obj = seurat_obj, python_home = python_home,
@@ -201,17 +223,4 @@ scrublet_R <- function(seurat_obj, python_home = Sys.which("python"),
 }
 
 
-source_py <- function(python_home = Sys.which("python"),
-                      py_script = paste(system.file(package = "scrubletR"), "scrublet.py", sep = "/")) {
-  ## use the python
-  reticulate::use_python(python_home)
 
-  ## test whether have the modules
-  if (!reticulate::py_module_available("scrublet")) {
-    stop("python module scrublet does not seem to be installed; - try running 'py_config()'")
-  }
-
-  ## source .py file
-  reticulate::source_python(py_script)
-
-}
