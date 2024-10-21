@@ -1,7 +1,7 @@
 Package: scrubletR
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
+Title: Run scrublet in r
+Version: 0.2.0
 Author: Erjie Zhao
 Maintainer: Erjie Zhao <2055469819@qq.com>
 Description: This package can identificate the cell doublets in single-cell transcriptomic data using the python module scrublet.
@@ -9,9 +9,12 @@ License: AGPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Imports: 
+    ggplot2,
     Matrix,
     methods,
+    patchwork,
     reticulate,
+    scales,
     Seurat
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.3.2
